@@ -1196,8 +1196,15 @@ function renderEF() {   // ESR (any quoted frequency) and SRF rows
   };
   row('echips', '最大 ESR', ESTEPS, STATS.ec, emax, v => { emax = v; }, v => `≤ ${fmtR(v)}`);
   $('fchips').hidden = !HAS_SRF;
-  if (HAS_SRF) row('fchips', '最低自谐振频率', FSTEPS, STATS.fc, fmin, v => { fmin = v; }, v => `≥ ${fmtF(v)}`);
+  if (HAS_SRF) {
+    row('fchips', '最低自谐振频率', FSTEPS, STATS.fc, fmin, v => { fmin = v; }, v => `≥ ${fmtF(v)}`);
+    const note = document.createElement('span'); note.className = 'hint';   // SRF exists only for MLCC: missing is not "low"
+    note.textContent = '仅 MLCC 有自谐振频率数据；硅电容、钽电容、铝电解未给出（不代表自谐振频率低），开启此筛选时不显示。';
+    $('fchips').append(note);
+  }
 }
+// classes without any SRF value: their count reads "no data" (not 0) while the SRF filter is on
+const SRF_CLASSES = new Set(CLASSES.filter(c => { const ci = CLASSES.indexOf(c); for (let i = 0; i < N; i++) if (D.c[i] === ci && D.sf[i] != null) return true; return false; }));
 function setBias(v, from) {
   if (!isFinite(v) || v < 0) return;
   bias = Math.round(v * 100) / 100;
@@ -1247,7 +1254,7 @@ function renderPanel(c) {
 
 function refresh() {
   STATS = stats();
-  for (const c of CLASSES) chipBtns[c].querySelector('.n').textContent = activeCount(c).toLocaleString('en-US');
+  for (const c of CLASSES) chipBtns[c].querySelector('.n').textContent = fmin != null && !SRF_CLASSES.has(c) ? '无 SRF 数据' : activeCount(c).toLocaleString('en-US');
   allBtn.setAttribute('aria-pressed', String(!state));
   for (const c of CLASSES) chipBtns[c].setAttribute('aria-pressed', String(c === state));
   for (const c of CLASSES) legItems[c].setAttribute('opacity', !state || state === c ? 1 : 0.35);
@@ -1629,8 +1636,15 @@ function renderEF() {   // ESR (any quoted frequency) and SRF rows
   };
   row('echips', 'Max ESR', ESTEPS, STATS.ec, emax, v => { emax = v; }, v => `≤ ${fmtR(v)}`);
   $('fchips').hidden = !HAS_SRF;
-  if (HAS_SRF) row('fchips', 'Min SRF', FSTEPS, STATS.fc, fmin, v => { fmin = v; }, v => `≥ ${fmtF(v)}`);
+  if (HAS_SRF) {
+    row('fchips', 'Min SRF', FSTEPS, STATS.fc, fmin, v => { fmin = v; }, v => `≥ ${fmtF(v)}`);
+    const note = document.createElement('span'); note.className = 'hint';   // SRF exists only for MLCC: missing is not "low"
+    note.textContent = 'Only MLCCs have SRF data; silicon, tantalum and aluminum electrolytic have none (not a low SRF) and are hidden while this filter is on.';
+    $('fchips').append(note);
+  }
 }
+// classes without any SRF value: their count reads "no data" (not 0) while the SRF filter is on
+const SRF_CLASSES = new Set(CLASSES.filter(c => { const ci = CLASSES.indexOf(c); for (let i = 0; i < N; i++) if (D.c[i] === ci && D.sf[i] != null) return true; return false; }));
 function setBias(v, from) {
   if (!isFinite(v) || v < 0) return;
   bias = Math.round(v * 100) / 100;
@@ -1680,7 +1694,7 @@ function renderPanel(c) {
 
 function refresh() {
   STATS = stats();
-  for (const c of CLASSES) chipBtns[c].querySelector('.n').textContent = activeCount(c).toLocaleString('en-US');
+  for (const c of CLASSES) chipBtns[c].querySelector('.n').textContent = fmin != null && !SRF_CLASSES.has(c) ? 'no SRF data' : activeCount(c).toLocaleString('en-US');
   allBtn.setAttribute('aria-pressed', String(!state));
   for (const c of CLASSES) chipBtns[c].setAttribute('aria-pressed', String(c === state));
   for (const c of CLASSES) legItems[c].setAttribute('opacity', !state || state === c ? 1 : 0.35);
