@@ -2,9 +2,9 @@
 
 👉 **在线使用 / Open the tool：<https://zhewenyu2000.github.io/power-component-selector/>**
 
-DC-DC 无源器件初筛网页：电感（体积–DCR、体积–电流）和电容（容量–体积，MLCC 含直流偏压）。中英双语。
+DC-DC 无源器件初筛网页：电感（体积–DCR、体积–电流）和电容（容量–体积，MLCC 含直流偏压；2026-10-13 加入 DTC 深沟槽电容，按面积 × 密度推算）。中英双语。
 
-A web page for first-pass selection of passive components for DC-DC converters: inductors (volume vs DCR and current) and capacitors (capacitance vs volume, with DC bias for MLCCs). English and Chinese.
+A web page for first-pass selection of passive components for DC-DC converters: inductors (volume vs DCR and current) and capacitors (capacitance vs volume, with DC bias for MLCCs; deep trench capacitors (DTC) added 2026-10-13 as area × density estimates). English and Chinese.
 
 数据来自厂商和分销商公开资料，截止 2026-10-03，非实测，仅供参考，以厂商规格书为准。
 
